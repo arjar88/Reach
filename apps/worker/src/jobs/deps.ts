@@ -1,6 +1,6 @@
 import { fetchWebsite } from "../../../../shared/safe-fetch.js";
 import { createApify, type CompanyCandidate, type ProfileCandidate } from "../../../../shared/providers/apify.js";
-import { createClaude } from "../../../../shared/providers/claude.js";
+import { createModel } from "../../../../shared/providers/model.js";
 import { onboardingPrompt, prescorePrompt, scorePrompt } from "../../../../shared/prompts/index.js";
 import { onboardingSchema, prescoreSchema, type OnboardingOutput } from "../../../../shared/prompts/schemas.js";
 import type { AgentFilter, EngagerInput } from "../../../../shared/signals/pipeline.js";
@@ -22,7 +22,7 @@ export interface JobDeps {
 }
 
 export function liveJobDeps(): JobDeps {
-  const claude = createClaude();
+  const model = createModel();
   const apify = createApify();
   return {
     async loadText(website) {
@@ -31,14 +31,14 @@ export function liveJobDeps(): JobDeps {
     },
     async analyze(text) {
       const prompt = onboardingPrompt({ text });
-      return claude.json("strong", prompt.system, prompt.user, onboardingSchema);
+      return model.json("strong", prompt.system, prompt.user, onboardingSchema);
     },
     searchCompanies: (name) => apify.searchCompanies(name),
     searchProfiles: (name) => apify.searchProfiles(name),
     engagersFor: (signal, now) => engagersFromApify(apify, signal, now),
     async prescore(agent, people) {
       const prompt = prescorePrompt({ icp: agent, people });
-      const parsed = await claude.json("small", prompt.system, prompt.user, prescoreSchema);
+      const parsed = await model.json("small", prompt.system, prompt.user, prescoreSchema);
       return parsed.results;
     },
     async score(agent, people, ids) {
@@ -48,7 +48,7 @@ export function liveJobDeps(): JobDeps {
         rejections: [],
         people: ids.map((id) => byId.get(id) ?? { id }),
       });
-      return claude.complete("small", prompt.system, prompt.user);
+      return model.complete("small", prompt.system, prompt.user);
     },
   };
 }

@@ -13,6 +13,9 @@
     "seed": "tsx db/seed.ts"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.85",
+    "@ai-sdk/google": "^4.0.102",
+    "ai": "^7.0.148",
     "drizzle-orm": "^0.44.6",
     "luxon": "^3.7.2",
     "postgres": "^3.4.7",

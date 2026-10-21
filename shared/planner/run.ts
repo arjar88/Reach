@@ -3,7 +3,7 @@ import type { Sql } from "postgres";
 import type { ActionType } from "../config.js";
 import { config } from "../config.js";
 import { defaultActiveDays, emptyUsage, localDayBounds, type UsageCounts } from "../limits.js";
-import { createClaude } from "../providers/claude.js";
+import { createModel } from "../providers/model.js";
 import type { UnipileClient } from "../providers/unipile.js";
 import { writePrompt } from "../prompts/index.js";
 import { writeSchema } from "../prompts/schemas.js";
@@ -367,7 +367,7 @@ async function stepsFor(sql: Sql, campaignId: string | null): Promise<StepRef[]>
 }
 
 async function writeCopy(due: DueContact): Promise<{ subject?: string; body: string }> {
-  const claude = createClaude();
+  const model = createModel();
   const prompt = writePrompt({
     language: due.language,
     step: due.step.type,
@@ -376,7 +376,7 @@ async function writeCopy(due: DueContact): Promise<{ subject?: string; body: str
     company: due.company,
     title: due.title,
   });
-  return claude.json("small", prompt.system, prompt.user, writeSchema);
+  return model.json("small", prompt.system, prompt.user, writeSchema);
 }
 
 function addStatus(bucket: UsageCounts, status: string, n: number): void {

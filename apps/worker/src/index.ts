@@ -2,7 +2,7 @@ import { Queue, Worker, type ConnectionOptions } from "bullmq";
 import type { Redis } from "ioredis";
 import type { Sql } from "postgres";
 import { createDb, type Database } from "../../../shared/db/client.js";
-import { createClaude } from "../../../shared/providers/claude.js";
+import { createModel, modelConfigured } from "../../../shared/providers/model.js";
 import { createResend } from "../../../shared/providers/resend.js";
 import { createUnipile } from "../../../shared/providers/unipile.js";
 import { startEnrichWorker } from "./jobs/enrich.js";
@@ -71,7 +71,7 @@ export async function startProductWorkers(redis: Redis, db: Database, sql: Sql) 
     new Worker(RECONCILE_QUEUE, async () => reconcileTick(), { connection: duplicate(redis, links), concurrency: 1 }),
     startEventsWorker(duplicate(redis, links), db, {
       sql,
-      claude: process.env.ANTHROPIC_API_KEY ? createClaude() : undefined,
+      model: modelConfigured() ? createModel() : undefined,
       resend: process.env.RESEND_API_KEY ? createResend() : undefined,
       enqueueSend: (actionId) => enqueueManualSend(queues.send, actionId),
     }),

@@ -43,4 +43,4 @@ Not deployed from this tree. The CLIs were not authenticated.
 - Vercel: project root `apps/web`, region `fra1`. Cron `GET /api/cron/worker-health` daily at 08:00 UTC. Set `CRON_SECRET`. The route returns 503 when the heartbeat is stale and `RESEND_API_KEY` is missing.
 - Railway: worker start `node apps/worker/dist/index.js` (`pnpm --filter @reach/worker build`), Redis `noeviction` and AOF.
 
-Vendor keys (`UNIPILE_*`, `APIFY_TOKEN`, `ANTHROPIC_API_KEY`, enrichment, `STRIPE_*`, `RESEND_API_KEY`) are not required for the test suite. `analyze` and `preview` fail the job row when a required key is missing.
+Vendor keys (`UNIPILE_*`, `APIFY_TOKEN`, an LLM key, enrichment, `STRIPE_*`, `RESEND_API_KEY`) are not required for the test suite. `analyze` and `preview` fail the job row when a required key is missing. Model calls use the Vercel AI SDK. Set `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, or `AI_GATEWAY_API_KEY`. `LLM_PROVIDER` picks `google`, `anthropic`, or `gateway` when more than one key is present.

@@ -11,7 +11,7 @@ import { postSlack } from "../providers/slack.js";
 import type { ResendClient } from "../providers/resend.js";
 import { draftPrompt, labelPrompt } from "../prompts/index.js";
 import { draftSchema, labelSchema } from "../prompts/schemas.js";
-import type { ClaudeClient } from "../providers/claude.js";
+import type { ModelClient } from "../providers/model.js";
 import { applyStripeEvent } from "./billing.js";
 import type { Sql } from "postgres";
 import { handleManualSend } from "./reply.js";
@@ -19,7 +19,7 @@ import { jobRequests } from "../db/schema.js";
 
 export interface ProcessDeps {
   sql: Sql;
-  claude?: ClaudeClient;
+  model?: ModelClient;
   resend?: ResendClient;
   enqueueSend?: (actionId: string) => Promise<void>;
   deleteUnipileAccount?: (accountId: string) => Promise<void>;
@@ -30,13 +30,13 @@ async function clearPayload(db: Database, dedupeKey: string): Promise<void> {
 }
 
 async function labelThread(db: Database, deps: ProcessDeps, threadId: string, orgId: string, contactEmail: string | null): Promise<void> {
-  if (!deps.claude) return;
+  if (!deps.model) return;
   const history = await db.select().from(threadMessages).where(eq(threadMessages.threadId, threadId)).orderBy(asc(threadMessages.sentAt));
   const recent = history.slice(-5).map((row) => ({ direction: row.direction, content: row.content }));
   const labelPromptParts = labelPrompt({ messages: recent });
-  const labeled = await deps.claude.json("small", labelPromptParts.system, labelPromptParts.user, labelSchema);
+  const labeled = await deps.model.json("small", labelPromptParts.system, labelPromptParts.user, labelSchema);
   const draftParts = draftPrompt({ messages: recent, label: labeled.label });
-  const draft = await deps.claude.json("strong", draftParts.system, draftParts.user, draftSchema);
+  const draft = await deps.model.json("strong", draftParts.system, draftParts.user, draftSchema);
   await db.update(threads).set({ label: labeled.label, labelReason: labeled.reason, aiDraft: draft.body }).where(eq(threads.id, threadId));
   const [org] = await db.select().from(organizations).where(eq(organizations.id, orgId)).limit(1);
   const text = `New reply (${labeled.label}): ${labeled.reason}`;
