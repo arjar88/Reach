@@ -1,0 +1,105 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1915;
+  --muted: #5c564c;
+  --line: #e4dccf;
+  --paper: #f6f1e8;
+  --card: #fffdf8;
+  --accent: #9a3412;
+  --accent-ink: #fff7ed;
+  --ok: #3f6212;
+  --warn: #92400e;
+  --bad: #9f1239;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+a { color: inherit; }
+
+.shell { max-width: 1080px; margin: 0 auto; padding: 28px 20px 80px; }
+
+main { max-width: 1080px; margin: 0 auto; padding: 0 0 2rem; }
+
+.nav {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+}
+
+.nav strong { font-size: 1.2rem; letter-spacing: 0.04em; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav form { display: inline; margin: 0; }
+
+h1 { font-weight: 500; font-size: 2rem; margin: 0 0 8px; }
+h2 { font-weight: 500; font-size: 1.25rem; margin: 0 0 12px; }
+p.lede { color: var(--muted); margin-top: 0; }
+
+.banner {
+  background: #fff4e5;
+  border: 1px solid #f0d3a8;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.grid { display: grid; gap: 16px; }
+.cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+.card, .thread {
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 16px;
+  margin: 0.75rem 0;
+}
+
+form { display: grid; gap: 0.75rem; margin: 1rem 0; }
+
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 10px; }
+input, select, textarea, button { font: inherit; color: inherit; }
+input, select, textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: white;
+}
+textarea { min-height: 88px; }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.days { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.days label { margin: 0; color: var(--ink); }
+
+button, .button {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  width: fit-content;
+}
+button.ghost, .button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+button.warn { background: var(--bad); }
+
+.meta { color: var(--muted); font-size: 0.92rem; }
+.status-ok { color: var(--ok); }
+.status-bad { color: var(--bad); }
+.status-warn { color: var(--warn); }
+.error, p[role="alert"] { color: var(--bad); }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tabs { display: flex; gap: 12px; margin: 12px 0 20px; }
+.step { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 8px; }
+.limits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

@@ -1,0 +1,24 @@
+{
+  "name": "reach",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.4",
+  "scripts": {
+    "dev": "pnpm --filter @reach/web dev",
+    "worker:dev": "pnpm --filter @reach/worker dev",
+    "build": "pnpm --filter @reach/worker build && pnpm --filter @reach/web build",
+    "test": "vitest run",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "eslint .",
+    "db:migrate": "tsx shared/db/migrate.ts",
+    "db:seed": "tsx shared/db/seed.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.0",
+    "vitest": "^3.2.4"
+  }
+}

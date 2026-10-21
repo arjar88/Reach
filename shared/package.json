@@ -1,0 +1,25 @@
+{
+  "name": "@reach/shared",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./providers/resend": "./providers/resend.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "migrate": "tsx db/migrate.ts",
+    "seed": "tsx db/seed.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.6",
+    "luxon": "^3.7.2",
+    "postgres": "^3.4.7",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^22.18.8"
+  }
+}
